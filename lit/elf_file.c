@@ -73,7 +73,7 @@ void Elf_file::readElf(const char *dir)
 			shdrTab[name] = shdr; //加入段表
 		}
 	}
-	delete[]  ; //清空段表字符串表
+	delete[]shstrTabData; //清空段表字符串表
 
 	Elf32_Shdr *strTab = shdrTab[".strtab"]; //字符串表信息
 	char *strTabData = new char[strTab->sh_size];

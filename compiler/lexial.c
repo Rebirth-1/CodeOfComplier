@@ -26,15 +26,14 @@ int getChar()
 		lineLen = 0;
 		lineNum++; //行号增加
 		ch = ' ';
-		while (ch != 10) //检测行行结束
+		while (ch != 10) //检测行行结束	注 9 tab; 10 换行; 13 回车
 		{
 			if (fscanf(fin, "%c", &ch) == EOF)
 			{
 				line[lineLen] = 0; //文件结束
 				break;
 			}
-			line[lineLen] = ch; //循环读取一行的字符
-			lineLen++;
+			line[lineLen++] = ch;  //循环读取一行的字符
 			if (lineLen == maxLen) //单行程序过长
 			{
 				//不继续读就可以，不用报错
@@ -44,8 +43,7 @@ int getChar()
 	}
 	//正常读取
 	oldCh = ch;
-	ch = line[chAtLine];
-	chAtLine++;
+	ch = line[chAtLine++];
 	if (ch == 0)
 		return -1;
 	else
@@ -80,10 +78,7 @@ int getSym()
 		{
 			reallen++;
 			if (idCount < idLen) //标识符过长部分掠去
-			{
-				id[idCount] = ch;
-				idCount++;
-			}
+				id[idCount++] = ch;
 			f = getChar();
 		} while (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z' || ch == '_' || ch >= '0' && ch <= '9');
 		id[idCount] = 0;	 //结尾
@@ -227,7 +222,7 @@ int getSym()
 				lexerror(charwrong, 0);
 				return -1;
 			}
-			letter = ch;
+			letter = ch; //转义字符
 			// GET_CHAR
 			f = getChar();
 			if (f == -1) //文件结束

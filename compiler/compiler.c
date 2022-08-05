@@ -33,7 +33,7 @@ Compiler::Compiler(bool l, bool sy, bool se, bool g, bool t)
 void Compiler::genCommonFile()
 {
   fout = fopen("../work/common.s", "w"); //共用输出文件
-  fprintf(fout, "section .text\n");      //TODO ??? 缺失. ???
+  fprintf(fout, "section .text\n");
   ///字符串长度异常输出函数
   fprintf(fout, "@str2long:\n\tmov edx,@str_2long_data_len\n\tmov ecx,@str_2long_data\n\tmov ebx, 1\n\tmov eax, 4\n\tint 128\n");
   fprintf(fout, "\tmov ebx, 0\n\tmov eax, 1\n\tint 128\n\tret\n");

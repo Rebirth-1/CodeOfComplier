@@ -116,9 +116,9 @@ var_record *genExp(var_record *p_factor1, symbol opp, var_record *p_factor2, int
 					 // cout<<"字符串链接运算"<<endl;
 		if (p_factor2->type == rsv_string)
 		{
-			labLop = genName("lab", null, "cpystr2");		//入口点
-			labExt = genName("lab", null, "cpystr2_exit");	//退出点
-			if (p_factor2->strValId == -1) //动态string
+			labLop = genName("lab", null, "cpystr2");	   //入口点
+			labExt = genName("lab", null, "cpystr2_exit"); //退出点
+			if (p_factor2->strValId == -1)				   //动态string
 			{
 				fprintf(fout, ";----------生成动态string%s的代码----------\n", p_factor2->name.c_str());
 				fprintf(fout, "\tmov eax,[@s_esp]\n\tmov [@s_esp],esp\n\tmov esp,eax\n"); // esp<=>[@s_esp]
@@ -649,16 +649,16 @@ var_record *genAssign(var_record *des, var_record *src, int &var_num)
 		if (des->strValId == -2) //全局string
 		{
 			string labLop = genName("lab", null, "cpy2gstr");
-			string labExt = genName("lab", null, "cpy2gstr_exit");			// _exit表示出口点
+			string labExt = genName("lab", null, "cpy2gstr_exit"); // _exit表示出口点
 			//将栈中的数据拷贝到静态存储区
 			if (src->localAddr < 0)
-				fprintf(fout, "\tmov ecx,0\n\tmov esi,[ebp%d]\n\tmov cl,[esi]\n", src->localAddr);	//把 源变量地址放到 esi上，在把 esi 地址保存到 cl 上 | cl 保存 变量长度
+				fprintf(fout, "\tmov ecx,0\n\tmov esi,[ebp%d]\n\tmov cl,[esi]\n", src->localAddr); //把 源变量地址放到 esi上，在把 esi 地址保存到 cl 上 | cl 保存 变量长度
 			else
 				fprintf(fout, "\tmov ecx,0\n\tmov esi,[ebp+%d]\n\tmov cl,[esi]\n", src->localAddr);
-			fprintf(fout, "\tcmp ecx,0\n\tje %s\n", labExt.c_str());		//cmp 相等则 je 
-			fprintf(fout, "\tmov [@str_%s_len],cl\n", des->name.c_str());   //先复制长度
+			fprintf(fout, "\tcmp ecx,0\n\tje %s\n", labExt.c_str());	  // cmp 相等则 je
+			fprintf(fout, "\tmov [@str_%s_len],cl\n", des->name.c_str()); //先复制长度
 			fprintf(fout, "\tsub esi,ecx\n");
-			fprintf(fout, "\tmov edi,@str_%s\n", des->name.c_str());		//@str_ 静态区
+			fprintf(fout, "\tmov edi,@str_%s\n", des->name.c_str()); //@str_ 静态区
 			fprintf(fout, "\tmov edx,0\n");
 			fprintf(fout, "%s:\n", labLop.c_str());
 			fprintf(fout, "\tmov al,[esi+edx]\n\tmov [edi+edx],al\n");
@@ -688,14 +688,14 @@ var_record *genAssign(var_record *des, var_record *src, int &var_num)
 		else //局部的
 		{
 			if (des->localAddr < 0)
-				fprintf(fout, "\tlea eax,[ebp%d]\n", des->localAddr);	//将目标数据 放到 eax
+				fprintf(fout, "\tlea eax,[ebp%d]\n", des->localAddr); //将目标数据 放到 eax
 			else
 				fprintf(fout, "\tlea eax,[ebp+%d]\n", des->localAddr);
 		}
 
-		if (src->localAddr == 0) //全局的
-			fprintf(fout, "\tmov ebx,[@var_%s]\n", src->name.c_str());	//将源地址 放到 ebx
-		else //局部的
+		if (src->localAddr == 0)									   //全局的
+			fprintf(fout, "\tmov ebx,[@var_%s]\n", src->name.c_str()); //将源地址 放到 ebx
+		else														   //局部的
 		{
 			if (src->localAddr < 0)
 				fprintf(fout, "\tmov ebx,[ebp%d]\n", src->localAddr);

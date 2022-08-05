@@ -555,7 +555,7 @@ void Table::addfun()
     }
   }
 }
-void Table::over() // TODO 进行最后的处理
+void Table::over()
 {
   if (errorNum != 0)
     return;
@@ -593,7 +593,7 @@ void Table::over() // TODO 进行最后的处理
     strcpy(strbuf, stringTable[i]->c_str());
     l = stringTable[i]->length();
     fprintf(fout, "\t@str_%d db ", i + 1);
-    int chpass = 0;
+    int chpass = 0; //判斷是否為同類
     for (int j = 0; j < l; j++)
     {
       if (strbuf[j] == 10 || strbuf[j] == 9 || strbuf[j] == '\"') //\n \t "

@@ -89,6 +89,7 @@ int nextToken()
     {
       if (showLex)
       {
+
         if (showSyn)
           printf("<------------------------------------------------------------------------------------------->\n");
         else
@@ -642,7 +643,7 @@ void statement(int &var_num, int &level, int lopId, int blockAddr)
 {
   string refname = "";
 
-  switch (token)  // TODO
+  switch (token) // TODO
   {
   case semicon:
     break;
@@ -907,7 +908,7 @@ void returntail(int &var_num, int &level)
   if (token == ident || token == number || token == chara || token == strings || token == lparen)
   {
     BACK
-    var_record *ret = expr(var_num);
+        var_record *ret = expr(var_num);
     sp("对return语句返回值的类型进行语义检查");
     if (ret != NULL && (ret->type != tfun.type))
     {
@@ -919,7 +920,7 @@ void returntail(int &var_num, int &level)
   else if (token == semicon) // return ;
   {
     BACK
-    sp("对return语句返回值的类型进行语义检查");
+        sp("对return语句返回值的类型进行语义检查");
     if (rsv_void != tfun.type)
     {
       //返回值类型不兼容
@@ -930,8 +931,7 @@ void returntail(int &var_num, int &level)
   }
   else if (token == rbrac)
   {
-    BACK
-    return;
+    BACK return;
   }
   else
   {
@@ -983,19 +983,18 @@ void realarg(string refname, int &var_num)
   if (token == ident || token == number || token == chara || token == strings || token == lparen)
   {
     BACK
-    table.addrealarg(expr(var_num), var_num);
+        table.addrealarg(expr(var_num), var_num);
     arglist(var_num);
   }
   else if (token == rparen || token == semicon) //^
   {
-    BACK
-    return;
+    BACK return;
   }
   else if (token == comma) //参数丢失
   {
     synterror(arglost, -1);
     BACK
-    arglist(var_num);
+        arglist(var_num);
   }
   else //报错
   {
@@ -1003,7 +1002,7 @@ void realarg(string refname, int &var_num)
   }
 }
 //<arglist>	->	comma<expr><arglist>|^
-void arglist(int &var_num)  //TODO ??? BACK 多余 ???
+void arglist(int &var_num) // TODO ??? BACK 多余 ???
 {
   nextToken();
   if (token == comma)
@@ -1012,20 +1011,19 @@ void arglist(int &var_num)  //TODO ??? BACK 多余 ???
     if (token == ident || token == number || token == chara || token == strings || token == lparen)
     {
       BACK
-      table.addrealarg(expr(var_num), var_num);
+          table.addrealarg(expr(var_num), var_num);
       arglist(var_num);
     }
     else if (token == comma)
     {
       synterror(arglost, -1);
       BACK
-      arglist(var_num);
+          arglist(var_num);
     }
     else if (token == semicon || token == rparen)
     {
       synterror(arglost, -1);
-      BACK 
-      return;
+      BACK return;
     }
     else
     {
@@ -1034,14 +1032,13 @@ void arglist(int &var_num)  //TODO ??? BACK 多余 ???
   }
   else if (token == rparen || token == semicon)
   {
-    BACK 
-    return;
+    BACK return;
   }
   else if (token == ident || token == number || token == chara || token == strings || token == lparen) //极有可能忘记逗号
   {
     synterror(commalost, -1);
     BACK
-    expr(var_num);
+        expr(var_num);
     arglist(var_num);
   }
   else //其他符号，告知当作分号处理
@@ -1200,13 +1197,12 @@ var_record *factortail(var_record *p_factor1, int &var_num)
   {
     synterror(opplost, -1);
     BACK
-    item(var_num);
+        item(var_num);
   }
   else //可能是因子运算符错误，也可能是其他的低级运算符
   {
     //返回交给上级处理，实在不是运算符的话会报错，不需要提前处理
-    BACK
-    return NULL;
+    BACK return NULL;
   }
   return NULL;
 }

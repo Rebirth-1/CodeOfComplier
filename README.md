@@ -10,4 +10,3 @@
 2. 编译`./cit ./file/test.c test`
 3. 生成可执行文件`./work/test`
 4. 测试运行`./work/test`
-

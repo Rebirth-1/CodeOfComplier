@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/bash
 echo 更新编译器
 cd ./compiler
 make
