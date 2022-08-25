@@ -35,7 +35,7 @@ struct fun_record//函数声明记录
   symbol type;//返回类型
   string name;//名称
   vector<symbol> *args;//参数类型列表
-  vector<var_record*>*localvars;//局部变量列表,指向哈希表,仅仅为函数定义服务
+  vector<var_record*>*localvars;//局部变量列表,指向哈希表,仅仅为函数定义服务  先加入参数
   int defined;//函数是否给出定义
   int flushed;//函数参数是否已经缓冲写入，标记是否再清楚的时候清除缓冲区
   int hadret;//记录是否含有返回语句

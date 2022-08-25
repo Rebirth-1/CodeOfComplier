@@ -192,7 +192,7 @@ void type(int cont[], int &cont_len, int len)
   {
   case number:
     cont[cont_len] = num;
-    cont_len++;           //TODO 不知为何还要加1？？？
+    cont_len++;
     break;
   case strings:
     for (int i = 0;; i++)

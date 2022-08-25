@@ -42,7 +42,7 @@ void SegList::allocAddr(string name, unsigned int &base, unsigned int &off)
 		align = 16;
 	off += (align - off % align) % align;
 	//使虚址和偏移按照4k模同余
-	base = base - base % MEM_ALIGN + off % MEM_ALIGN;		//TODO ???
+	base = base - base % MEM_ALIGN + off % MEM_ALIGN;
 	//累加地址和偏移
 	baseAddr = base;
 	offset = off;

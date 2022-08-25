@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 		NEXT int index = arg.rfind(".c");			  //获取输入文件的.c位置
 		if (index == -1 || index != arg.length() - 2) //不存在.c或者最后一个.c不在最后 即这是输出的文件
 		{
-			int x = access(arg.c_str(), W_OK); // TODO 应该加判断
+			int x = access(arg.c_str(), W_OK); // BUG 没用
 			if ((arg[0] != '-') && (arg[arg.size() - 1] != '/'))
 			{
 				desFileName = arg; //记录输出文件名
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 			cout << "源文件" + arg + "无法访问！" << endl;
 			return 0;
 		}
-		if (arg.find("/") != 0) // TODO相对路径 如果是/usr/var/code.c 则会出错
+		if (arg.find("/") != 0)
 			arg = curDir + arg;
 		srcFileNames.push_back(arg); //记录一个源文件名
 		string fileName = arg;
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 		cout << "请指定源文件！" << endl;
 		return 0;
 	}
-	if (desFileName == "") //还没有记录输出文件
+	if (desFileName == "") // 第二次检测保证输出文件存在
 	{
 		if (flag)
 		{
@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 			return 0;
 		}
 	}
-	if (desFileName.find("/") != 0) // TODO相对路径 不严谨
+	if (desFileName.find("/") != 0) // BUG 检查绝对路径
 		desFileName = curDir + "work/" + desFileName;
 	//测试输出路径的有效性
 	FILE *f = fopen(desFileName.c_str(), "wb");
@@ -186,8 +186,8 @@ void work()
 	for (int i = 0; i < srcFileNames.size(); i++)
 	{
 		cout << "正在编译文件" << srcFileNames[i] << "。\n";
-		exeCmd("cd ./compiler\n./compiler " + srcFileNames[i] + opt + "\ncd ..\n"); //Windows暂时不支持
-		// exeCmd("cd ./compiler&&compiler.exe " + srcFileNames[i] + opt + "&&cd ..");
+		// exeCmd("cd ./compiler\n./compiler " + srcFileNames[i] + opt + "\ncd ..\n"); //Windows暂时不支持
+		exeCmd("cd ./compiler&&compiler.exe " + srcFileNames[i] + opt + "&&cd ..");
 	}
 	//汇编
 	bool flag = true;
@@ -211,16 +211,16 @@ void work()
 			string realName = kernelFileNames[i] + ".s";
 			cout << "正在汇编文件" << kernelFileNames[i] + ".s"
 				 << "。\n";
-			exeCmd("cd ./ass\n./ass " + kernelFileNames[i] + opt + "\ncd ..\n"); //Windows暂时不支持
-			// exeCmd("cd ./ass&&./ass " + kernelFileNames[i] + opt + "&&cd ..");
+			// exeCmd("cd ./ass\n./ass " + kernelFileNames[i] + opt + "\ncd ..\n"); //Windows暂时不支持
+			exeCmd("cd ./ass&&./ass " + kernelFileNames[i] + opt + "&&cd ..");
 			objNames += kernelFileNames[i] + ".o "; //.o后面有空格
 		}
 		opt = "";
 		opt += (showLink) ? " y" : " n";
 		cout << "正在执行链接。\n";
 		objNames += desFileName + " ";
-		exeCmd("cd ./lit\n./lit " + objNames + opt + "\ncd ..\n");	//Windows暂时不支持
-		// exeCmd("cd ./lit&&./lit " + objNames + opt + "&&cd ..");
+		// exeCmd("cd ./lit\n./lit " + objNames + opt + "\ncd ..\n");	//Windows暂时不支持
+		exeCmd("cd ./lit&&./lit " + objNames + opt + "&&cd ..");
 		// cout<<"./lit "+objNames+opt+"\n";
 		if (access(desFileName.c_str(), F_OK) != 0)
 		{

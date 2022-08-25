@@ -47,7 +47,7 @@ fun_record::fun_record() //默认构造函数
   this->type = null;
   this->name = "";
   this->args = new vector<symbol>();
-  this->args->clear();
+  this->args->clear();              //HACK  感觉没必要，如果需要的话，下面拷贝构造函数也应该加上
   this->localvars = new vector<var_record *>();
   this->defined = 0;
   this->flushed = 0;
@@ -89,7 +89,7 @@ void fun_record::pushlocalvar() //添加一个局部变量
   if (synerr != 0) //有语法错误，不处理
     return;
   //局部变量定义的缓冲机制，defined==1之前，是不写入符号表的，因为此时还不能确定是不是函数定义
-  if (defined == 0) //还是参数声明
+  if (defined == 0) //还是参数声明      //HACK  只是针对参数声明，而不是局部变量和参数定义
   {
     this->localvars->push_back(new var_record(tvar));
     //     cout<<"缓冲"<<this->name<<"函数的参数变量"<<symName[tvar.type]<<" "<<tvar.name<<endl;
@@ -131,7 +131,7 @@ void fun_record::flushargs() //将参数写到符号表
   //把参数写入名字表
   for (int i = argslen - 1; i >= 0; i--)
   {
-    var_record *pRec = (*localvars)[i]; // TODO  ??? localvars or args ???
+    var_record *pRec = (*localvars)[i];
     pRec->localAddr = 4 * (i + 2);      //修改参数地址，参数的地址按照ebp+4*count+4的方式变化
     if (pRec->type == rsv_string)
       pRec->strValId = -1; //参数的类型统一为动态string
@@ -177,7 +177,7 @@ int fun_record::equal(fun_record &f)
   int flag = 1;
   if (args->size() == f.args->size())
   {
-    for (int i = 0; i < f.args->size(); i++) //参数不匹配
+    for (int i = 0; i < f.args->size(); i++) //参数进行类型匹配
     {
       if ((*f.args)[i] != (*args)[i])
       {
@@ -324,7 +324,7 @@ var_record *Table::genCall(string fname, int &var_num)
     {
       int l = real_args_list.size();
       int m = pfun->args->size();
-      for (int i = l - 1, j = m - 1; j >= 0; i--, j--)
+      for (int i = l - 1, j = m - 1; j >= 0; i--, j--)  //HACK  注意从右往左添加参数
       {
         if (real_args_list[i]->type != (*(pfun->args))[j])
         {
@@ -506,7 +506,7 @@ void Table::addfun()
     if (pfun->defined == 1)
     {
       tfun.flushargs();
-      genFunhead();   // TODO
+      genFunhead();
     }
   }
   else //函数声明过了
@@ -588,7 +588,7 @@ void Table::over()
   //生成文字池
   char strbuf[255];
   int l;
-  for (int i = 0; i < stringTable.size(); i++)
+  for (int i = 0; i < stringTable.size(); i++)    // TODO  未明白??? 对汇编的不熟悉
   {
     strcpy(strbuf, stringTable[i]->c_str());
     l = stringTable[i]->length();

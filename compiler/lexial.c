@@ -26,14 +26,14 @@ int getChar()
 		lineLen = 0;
 		lineNum++; //行号增加
 		ch = ' ';
-		while (ch != 10) //检测行行结束	注 9 tab; 10 换行; 13 回车
+		while (ch != 10) //检测行行结束	注 9 tab; 10 换行; 13 回车		//HACK  此循环读取了一行，最大maxLen
 		{
 			if (fscanf(fin, "%c", &ch) == EOF)
 			{
 				line[lineLen] = 0; //文件结束
 				break;
 			}
-			line[lineLen++] = ch;  //循环读取一行的字符
+			line[lineLen++] = ch;  //循环读取一行的字符			//HACK  ++正好使得下标与数量同时符合
 			if (lineLen == maxLen) //单行程序过长
 			{
 				//不继续读就可以，不用报错
@@ -336,7 +336,7 @@ int getSym()
   关联：全局变量sym,id[]
 */
 // checkReserved()
-#define reservedNum 13
+#define reservedNum 13							// HACK  注意下面数据按字母先后排列的
 static char reservedTable[reservedNum][idLen] = {"break", "char", "continue", "else", "extern", "if", "in", "int", "out", "return", "string", "void", "while"};
 static enum symbol reservedSymbol[reservedNum] = {rsv_break, rsv_char, rsv_continue, rsv_else, rsv_extern, rsv_if, rsv_in, rsv_int, rsv_out, rsv_return, rsv_string, rsv_void, rsv_while};
 

@@ -434,7 +434,7 @@ void para() // untest
 }
 //<paralist>	->	comma<type>ident<paralist>|^
 
-void paralist() // untest
+void paralist() // untest     //HACK  以，开始
 {
   nextToken();
   if (token == comma)

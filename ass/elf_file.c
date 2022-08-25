@@ -91,7 +91,7 @@ void Elf_file::addSym(lb_record *lb)
 	//对于@while_ @if_ @lab_ @cal_开头和@s_stack的都是局部符号，可以不用导出，但是为了objdump方便而导出
 	*/
 	if (name.find("@lab_") == 0 || name.find("@if_") == 0 || name.find("@while_") == 0 || name.find("@cal_") == 0 || name == "@s_stack")
-		return;			//TODO不理解
+		return;
 
 	if (lb->segName == ".text") //代码段
 	{
@@ -160,7 +160,7 @@ RelInfo *Elf_file::addRel(string seg, int addr, string lb, int type)
 	relTab.push_back(rel);
 	return rel;
 }
-void Elf_file::writeElf()	//TODO
+void Elf_file::writeElf()
 {
 	fclose(fout);
 	fout = fopen((finName + ".o").c_str(), "w"); //输出文件
@@ -256,7 +256,7 @@ void Elf_file::assmObj()
 	addShdr(".shstrtab", SHT_STRTAB, 0, 0, curOff, shstrtabSize, SHN_UNDEF, 0, 1, 0); //.shstrtab
 	//-----定位段表
 	curOff += shstrtabSize;
-	ehdr.e_shoff = curOff;
+	ehdr.e_shoff = curOff;	//HACK 指向段表，不包括段表字符串
 	// cout<<"--------------------------段表偏移"<<curOff<<endl;
 	//-----添加符号表
 	curOff += 9 * 40; // 8个段+空段，段表字符串表偏移，符号表表偏移
